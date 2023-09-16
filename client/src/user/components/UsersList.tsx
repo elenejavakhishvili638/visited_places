@@ -1,6 +1,7 @@
 import "./UsersList.css"
 import UserItem from "./UserItem"
 import { Person } from "../../types/userTypes"
+import Card from "../../shared/components/UiElements/Card"
 
 type Props = {
     users: Person[]
@@ -9,7 +10,9 @@ type Props = {
 export default function UsersList({ users }: Props) {
     if (users.length === 0) {
         return (<div className='center'>
-            <h2>No users found.</h2>
+            <Card style={{ padding: "1rem" }}>
+                <h2>No users found.</h2>
+            </Card>
         </div>)
     }
     return (

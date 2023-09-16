@@ -6,14 +6,14 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
-import User from './user/pages/User';
+import Users from './user/pages/Users';
 import ErrorPage from './shared/components/error-page';
 import NewPlace from './places/pages/NewPlace';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <User />,
+    element: <Users />,
     errorElement: <ErrorPage />,
   },
   {

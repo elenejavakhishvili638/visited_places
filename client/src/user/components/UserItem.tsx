@@ -1,20 +1,30 @@
 import "./UserItem.css"
+import Avatar from "../../shared/components/UiElements/Avatar"
+import { Link } from "react-router-dom"
+import Card from "../../shared/components/UiElements/Card"
 
 type Props = {
-    id: string,
     image: string,
     name: string,
-    placeCount: number
+    placeCount: number,
+    id: string
 }
 
-function UserItem({ image, id, name, placeCount }: Props) {
+function UserItem({ image, name, placeCount, id }: Props) {
     return (
-        <div>
-            <img src={image} />
-            <p>{id}</p>
-            <p>{name}</p>
-            <p>{placeCount}</p>
-        </div>
+        <li className="user-item">
+            <Card className="user-item__content">
+                <Link to={`/${id}/places`}>
+                    <div className="user-item__image" >
+                        <Avatar image={image} alt={name} />
+                    </div>
+                    <div className="user-item__info">
+                        <h2>{name}</h2>
+                        <h3>{placeCount} {placeCount === 1 ? "Place" : "Places"}</h3>
+                    </div>
+                </Link>
+            </Card>
+        </li>
     )
 }
 

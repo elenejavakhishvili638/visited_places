@@ -13,9 +13,9 @@ export default function UsersList({ users }: Props) {
         </div>)
     }
     return (
-        <ul>
+        <ul className="users-list">
             {users.map((user) => {
-                return <UserItem key={user.id} image={user.image} name={user.name} id={user.id} placeCount={user.places} />
+                return <UserItem key={user.id} id={user.id} image={user.image} name={user.name} placeCount={user.places} />
             })}
         </ul>
     )

@@ -12,7 +12,7 @@ function NavLinks({ closeDrawer }: Props) {
                 <NavLink to="/" onClick={closeDrawer}>ALL USERS</NavLink>
             </li>
             <li>
-                <NavLink to="/u1/places" onClick={closeDrawer}>MY PLACES</NavLink>
+                <NavLink to="/u2/places" onClick={closeDrawer}>MY PLACES</NavLink>
             </li>
             <li>
                 <NavLink to="/places/new" onClick={closeDrawer}>ADD PLACES</NavLink>

@@ -22,7 +22,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/palces/new",
+    path: "/places/new",
     element: (
       <Layout>
         <NewPlace />

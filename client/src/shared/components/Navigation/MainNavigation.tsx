@@ -2,6 +2,7 @@ import { Link } from "react-router-dom"
 import MainHeader from "./MainHeader"
 import "./MainNavigation.css"
 import { AiOutlineMenu } from "react-icons/ai"
+import NavLinks from "./NavLinks"
 
 
 const MainNavigation = () => {
@@ -15,7 +16,9 @@ const MainNavigation = () => {
                     Your places
                 </Link>
             </h1>
-            <nav>...</nav>
+            <nav>
+                <NavLinks />
+            </nav>
         </MainHeader>
     )
 }

@@ -1,3 +1,4 @@
+import Button from "../../shared/components/FormElements/Button"
 import Card from "../../shared/components/UiElements/Card"
 import { Location } from "../../types/placeTypes"
 import "./PlaceItem.css"
@@ -7,11 +8,12 @@ type Props = {
     name: string,
     description: string,
     address: string,
-    coordinates: Location
+    coordinates: Location,
+    id: string
 }
 
 const PlaceItem = (props: Props) => {
-    const { image, description, name, address } = props
+    const { image, description, name, address, id } = props
     return (
         <li className="place-item">
             <Card className="place-item__content">
@@ -24,9 +26,9 @@ const PlaceItem = (props: Props) => {
                     <p>{description}</p>
                 </div>
                 <div className="place-item__actions">
-                    <button>VIEW ON A MAP</button>
-                    <button>EDIT</button>
-                    <button>DELETE</button>
+                    <Button inverse>VIEW ON A MAP</Button>
+                    <Button to={`/places/${id}`}>EDIT</Button>
+                    <Button danger>DELETE</Button>
                 </div>
             </Card>
         </li>

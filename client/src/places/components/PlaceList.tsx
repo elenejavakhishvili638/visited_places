@@ -19,7 +19,7 @@ const PlaceList = (props: Props) => {
     }
     return (
         <ul className="place-list">
-            {places.map((place) => <PlaceItem key={place.id} image={place.image} name={place.name} description={place.description} address={place.address} coordinates={place.coordinates} />)}
+            {places.map((place) => <PlaceItem key={place.id} id={place.id} image={place.image} name={place.name} description={place.description} address={place.address} coordinates={place.coordinates} />)}
         </ul>
     )
 }

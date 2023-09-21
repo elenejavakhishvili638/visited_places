@@ -4,17 +4,29 @@ import "./MainNavigation.css"
 import { AiOutlineMenu } from "react-icons/ai"
 import NavLinks from "./NavLinks"
 import SideDrawer from "./SideDrawer"
+import { useState } from "react"
+import { Backdrop } from "../UiElements/Backdrop"
 
 const MainNavigation = () => {
+    const [sideDrawer, setSideDrawer] = useState(false)
+
+    const openSideDrawer = () => {
+        setSideDrawer(true)
+    }
+
+    const closeSideDrawer = () => {
+        setSideDrawer(false)
+    }
     return (
         <>
-            <SideDrawer>
+            {sideDrawer && <Backdrop closeDrawer={closeSideDrawer} />}
+            <SideDrawer show={sideDrawer}>
                 <nav className="main-navigation__drawer-nav">
-                    <NavLinks></NavLinks>
+                    <NavLinks closeDrawer={closeSideDrawer}></NavLinks>
                 </nav>
             </SideDrawer>
             <MainHeader>
-                <button className="main-navigation__menu-btn">
+                <button className="main-navigation__menu-btn" onClick={openSideDrawer}>
                     <AiOutlineMenu />
                 </button>
                 <h1 className="main-navigation__title">

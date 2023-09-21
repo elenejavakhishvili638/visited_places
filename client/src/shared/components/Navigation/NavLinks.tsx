@@ -1,20 +1,24 @@
 import "./NavLinks.css"
 import { NavLink } from "react-router-dom"
 
-function NavLinks() {
+type Props = {
+    closeDrawer?: () => void
+}
+
+function NavLinks({ closeDrawer }: Props) {
     return (
         <ul className="nav-links">
             <li>
-                <NavLink to="/">ALL USERS</NavLink>
+                <NavLink to="/" onClick={closeDrawer}>ALL USERS</NavLink>
             </li>
             <li>
-                <NavLink to="/u1/places">MY PLACES</NavLink>
+                <NavLink to="/u1/places" onClick={closeDrawer}>MY PLACES</NavLink>
             </li>
             <li>
-                <NavLink to="/places/new">ADD PLACES</NavLink>
+                <NavLink to="/places/new" onClick={closeDrawer}>ADD PLACES</NavLink>
             </li>
             <li>
-                <NavLink to="/auth">AUTHENTICATE</NavLink>
+                <NavLink to="/auth" onClick={closeDrawer}>AUTHENTICATE</NavLink>
             </li>
         </ul>
     )

@@ -4,6 +4,7 @@ import Card from "../../shared/components/UiElements/Card"
 import { Location } from "../../types/placeTypes"
 import "./PlaceItem.css"
 import Modal from "../../shared/components/UiElements/Modal"
+import Map from "../../shared/components/UiElements/Map"
 
 type Props = {
     image: string,
@@ -22,7 +23,7 @@ const PlaceItem = (props: Props) => {
     const closeMap = () => setShowMap(false)
 
 
-    const { image, description, name, address, id } = props
+    const { image, description, name, address, id, coordinates } = props
     return (
         <>
             <Modal
@@ -34,7 +35,9 @@ const PlaceItem = (props: Props) => {
                 footer={<Button onClick={closeMap} >CLOSE</Button>}
             >
 
-                <div className="map-container">THE MAP</div>
+                <div className="map-container">
+                    <Map center={coordinates} zoom={16} />
+                </div>
             </Modal>
             <li className="place-item">
                 <Card className="place-item__content">

@@ -10,8 +10,8 @@ const DUMMY_PLACES: Place[] = [
         image: "dnksjdkjb",
         address: "djksd",
         coordinates: {
-            lat: "dsds",
-            lng: "sjdsnjkn"
+            lat: 48.8584,
+            lng: 2.2945
         },
         userId: "u1"
     },
@@ -22,8 +22,8 @@ const DUMMY_PLACES: Place[] = [
         image: "dnksjdkjb",
         address: "djksd",
         coordinates: {
-            lat: "dsds",
-            lng: "sjdsnjkn"
+            lat: 48.8584,
+            lng: 2.2945
         },
         userId: "u2"
     }

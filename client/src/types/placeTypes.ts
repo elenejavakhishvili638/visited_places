@@ -9,6 +9,6 @@ export type Place = {
 }
 
 export type Location = {
-    lat: string,
-    lng: string
+    lat: number,
+    lng: number
 }

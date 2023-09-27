@@ -2,7 +2,7 @@ import "./Backdrop.css"
 import { createPortal } from 'react-dom'
 
 type Props = {
-  closeDrawer: () => void
+  closeDrawer?: () => void
 }
 
 export const Backdrop = ({ closeDrawer }: Props) => {

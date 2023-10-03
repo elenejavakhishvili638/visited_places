@@ -1,78 +1,24 @@
 import Input from "../../shared/components/FormElements/Input"
 import "./PlaceForm.css"
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../shared/util/validators"
-import { useCallback, useReducer } from "react"
 import Button from "../../shared/components/FormElements/Button";
-
-type InputData = {
-    value: string;
-    isValid: boolean;
-};
-
-type FormState = {
-    inputs: {
-        title: InputData,
-        description: InputData,
-        address: InputData
-    },
-    isValid: boolean
-}
-
-type FormAction = {
-    type: "INPUT_CHANGE";
-    inputId: string,
-    isValid: boolean,
-    value: string
-}
-
-
-const formReducer = (state: FormState, action: FormAction) => {
-    let formIsValid = true;
-    switch (action.type) {
-        case "INPUT_CHANGE":
-            for (const inputId in state.inputs) {
-                if (inputId === action.inputId) {
-                    formIsValid = formIsValid && action.isValid
-                } else {
-                    formIsValid = formIsValid && state.inputs[inputId as keyof typeof state.inputs].isValid
-                }
-            }
-            return {
-                ...state,
-                inputs: {
-                    ...state.inputs,
-                    [action.inputId]: { value: action.value, isValid: action.isValid }
-                },
-                isValid: formIsValid
-            }
-        default:
-            return state
-    }
-}
+import { useForm } from "../../shared/hooks/form-hook";
 
 const NewPlace = () => {
-
-    const [formState, dispatch] = useReducer(formReducer, {
-        inputs: {
-            title: {
-                value: "",
-                isValid: false
-            },
-            description: {
-                value: "",
-                isValid: false
-            },
-            address: {
-                value: "",
-                isValid: false
-            }
+    const [formState, inputHandle] = useForm({
+        title: {
+            value: "",
+            isValid: false
         },
-        isValid: false
-    })
-
-    const inputHandle = useCallback((id: string, value: string, valid: boolean) => {
-        dispatch({ type: "INPUT_CHANGE", value, isValid: valid, inputId: id })
-    }, [])
+        description: {
+            value: "",
+            isValid: false
+        },
+        address: {
+            value: "",
+            isValid: false
+        }
+    }, false)
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()

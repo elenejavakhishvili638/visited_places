@@ -31,7 +31,7 @@ type Props = {
     validators: ValidatorFunction[],
     onInput: (id: string, value: string, valid: boolean) => void,
     value?: string,
-    valid?: true
+    valid?: boolean
 }
 
 const inputReducer = (state: InputState, action: InputAction) => {

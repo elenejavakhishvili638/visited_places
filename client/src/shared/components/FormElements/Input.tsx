@@ -30,6 +30,8 @@ type Props = {
     errorText?: string,
     validators: ValidatorFunction[],
     onInput: (id: string, value: string, valid: boolean) => void,
+    value?: string,
+    valid?: true
 }
 
 const inputReducer = (state: InputState, action: InputAction) => {
@@ -50,11 +52,11 @@ const inputReducer = (state: InputState, action: InputAction) => {
     }
 }
 
-function Input({ label, type, id, elementType, placeholder, rows, errorText, validators, onInput }: Props) {
+function Input({ label, type, id, elementType, placeholder, rows, errorText, validators, onInput, value, valid }: Props) {
 
     const [inputState, dispatch] = useReducer(inputReducer, {
-        value: "",
-        isValid: false,
+        value: value || "",
+        isValid: valid || false,
         isTouched: false
     });
 

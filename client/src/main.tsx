@@ -11,6 +11,7 @@ import ErrorPage from './shared/components/error-page';
 import NewPlace from './places/pages/NewPlace';
 import Layout from './shared/components/UiElements/Layout';
 import UserPlaces from './places/pages/UserPlaces';
+import UpdatePlace from './places/pages/UpdatePlace';
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,15 @@ const router = createBrowserRouter([
     element: (
       <Layout>
         <NewPlace />
+      </Layout>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/places/:placeId",
+    element: (
+      <Layout>
+        <UpdatePlace />
       </Layout>
     ),
     errorElement: <ErrorPage />,

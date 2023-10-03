@@ -5,6 +5,7 @@ import Input from "../../shared/components/FormElements/Input"
 import Button from "../../shared/components/FormElements/Button"
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../shared/util/validators"
 import { useForm } from "../../shared/hooks/form-hook"
+import { useEffect, useState } from "react"
 
 const DUMMY_PLACES: Place[] = [
     {
@@ -35,17 +36,34 @@ const DUMMY_PLACES: Place[] = [
 
 function UpdatePlace() {
     const { placeId } = useParams()
-    const foundPlace = DUMMY_PLACES.find((place) => place.id === placeId)
-    const [formState, inputHandle] = useForm({
+    const [loading, setLoading] = useState<boolean>(true)
+    const [formState, inputHandle, setFormData] = useForm({
         title: {
-            value: foundPlace!.name,
-            isValid: true
+            value: "",
+            isValid: false
         },
         description: {
-            value: foundPlace!.description,
-            isValid: true
+            value: "",
+            isValid: false
         },
-    }, true)
+    }, false)
+
+    const foundPlace = DUMMY_PLACES.find((place) => place.id === placeId)
+
+    useEffect(() => {
+        setFormData({
+            title: {
+                value: foundPlace!.name,
+                isValid: true
+            },
+            description: {
+                value: foundPlace!.description,
+                isValid: true
+            },
+        }, true)
+        setLoading(false)
+    }, [foundPlace, setFormData])
+
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -62,30 +80,36 @@ function UpdatePlace() {
     }
 
     return (
-        <form className="place-form" onSubmit={handleSubmit}>
-            <Input
-                id="title"
-                elementType="input"
-                type="text"
-                label="Title"
-                validators={[VALIDATOR_REQUIRE()]}
-                errorText="PLease enter a valid value"
-                onInput={inputHandle}
-                value={formState.inputs.title?.value}
-                valid={formState.inputs.title?.isValid}
-            />
-            <Input
-                id="description"
-                elementType="textarea"
-                label="Description"
-                validators={[VALIDATOR_MINLENGTH(5)]}
-                errorText="PLease enter a valid value"
-                onInput={inputHandle}
-                value={formState.inputs.description?.value}
-                valid={formState.inputs.description?.isValid}
-            />
-            <Button type="submit" disabled={!formState.isValid}>UPDATE PLACE</Button>
-        </form>
+        <>
+            {
+                !loading && (
+                    <form className="place-form" onSubmit={handleSubmit}>
+                        <Input
+                            id="title"
+                            elementType="input"
+                            type="text"
+                            label="Title"
+                            validators={[VALIDATOR_REQUIRE()]}
+                            errorText="PLease enter a valid value"
+                            onInput={inputHandle}
+                            value={formState.inputs.title?.value}
+                            valid={formState.inputs.title?.isValid}
+                        />
+                        <Input
+                            id="description"
+                            elementType="textarea"
+                            label="Description"
+                            validators={[VALIDATOR_MINLENGTH(5)]}
+                            errorText="PLease enter a valid value"
+                            onInput={inputHandle}
+                            value={formState.inputs.description?.value}
+                            valid={formState.inputs.description?.isValid}
+                        />
+                        <Button type="submit" disabled={!formState.isValid}>UPDATE PLACE</Button>
+                    </form>
+                )
+            }
+        </>
     )
 }
 

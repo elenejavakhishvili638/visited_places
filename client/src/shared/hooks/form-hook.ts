@@ -20,6 +20,10 @@ type FormAction = {
     inputId: string,
     isValid: boolean,
     value: string
+} | {
+    type: 'SET_DATA',
+    inputs: FormInputs,
+    isValid: boolean
 }
 
 
@@ -43,13 +47,18 @@ const formReducer = (state: FormState, action: FormAction) => {
                 },
                 isValid: formIsValid
             }
+        case "SET_DATA":
+            return {
+                inputs: action.inputs,
+                isValid: action.isValid
+            }
         default:
             return state
     }
 }
 
 
-type UseFormReturnType = [FormState, (id: string, value: string, valid: boolean) => void];
+type UseFormReturnType = [FormState, (id: string, value: string, valid: boolean) => void, (inputData: FormInputs, formValidity: boolean) => void];
 
 
 export const useForm = (initialInputs: FormInputs, initialValidity: boolean): UseFormReturnType => {
@@ -63,5 +72,9 @@ export const useForm = (initialInputs: FormInputs, initialValidity: boolean): Us
         dispatch({ type: "INPUT_CHANGE", value, isValid: valid, inputId: id })
     }, [])
 
-    return [formState, inputHandle]
+    const setFormData = useCallback((inputData: FormInputs, formValidity: boolean) => {
+        dispatch({ type: "SET_DATA", inputs: inputData, isValid: formValidity })
+    }, [])
+
+    return [formState, inputHandle, setFormData]
 }

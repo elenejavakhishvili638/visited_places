@@ -18,9 +18,18 @@ type Props = {
 const PlaceItem = (props: Props) => {
 
     const [showMap, setShowMap] = useState<boolean>(false)
+    const [showConfirm, setShowConfirm] = useState<boolean>(false)
 
     const openMap = () => setShowMap(true)
     const closeMap = () => setShowMap(false)
+
+    const showDeleteWarning = () => setShowConfirm(true)
+    const closeDeleteWarning = () => setShowConfirm(false)
+    const handleDelete = () => {
+        setShowConfirm(false)
+        console.log("delete")
+    }
+
 
 
     const { image, description, name, address, id, coordinates } = props
@@ -39,6 +48,20 @@ const PlaceItem = (props: Props) => {
                     <Map center={coordinates} zoom={16} />
                 </div>
             </Modal>
+            <Modal
+                header="Are you sure?"
+                footerClass="place-item__modal-actions"
+                footer={
+                    <>
+                        <Button inverse onClick={closeDeleteWarning}>CANCEL</Button>
+                        <Button danger onClick={handleDelete}>DELETE</Button>
+                    </>
+                }
+                show={showConfirm}
+                onCancel={closeDeleteWarning}
+            >
+                <p>Do you want to proceed and delete this place?</p>
+            </Modal>
             <li className="place-item">
                 <Card className="place-item__content">
                     <div className="place-item__image">
@@ -52,7 +75,7 @@ const PlaceItem = (props: Props) => {
                     <div className="place-item__actions">
                         <Button inverse onClick={openMap}>VIEW ON A MAP</Button>
                         <Button to={`/places/${id}`}>EDIT</Button>
-                        <Button danger>DELETE</Button>
+                        <Button danger onClick={showDeleteWarning}>DELETE</Button>
                     </div>
                 </Card>
             </li>

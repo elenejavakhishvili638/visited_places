@@ -12,6 +12,7 @@ import NewPlace from './places/pages/NewPlace';
 import Layout from './shared/components/UiElements/Layout';
 import UserPlaces from './places/pages/UserPlaces';
 import UpdatePlace from './places/pages/UpdatePlace';
+import Auth from './user/pages/Auth';
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,15 @@ const router = createBrowserRouter([
     element: (
       <Layout>
         <Users />
+      </Layout>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/auth",
+    element: (
+      <Layout>
+        <Auth />
       </Layout>
     ),
     errorElement: <ErrorPage />,

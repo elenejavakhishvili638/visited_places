@@ -1,6 +1,6 @@
 import { useCallback, useReducer } from "react"
 
-type InputKeys = 'title' | 'description' | 'address';
+type InputKeys = 'title' | 'description' | 'address' | 'email' | 'password';
 
 type InputData = {
     value: string;

@@ -105,6 +105,10 @@ export const updatePlace = async (req, res, next) => {
 export const deletePlace = async (req, res, next) => {
   const placeId = req.params.placeId;
 
+  if (!DUMMY_PLACES.find((place) => place.id === placeId)) {
+    return next(new HttpError("Could not find a place with this id", 404));
+  }
+
   DUMMY_PLACES.filter((place) => place.id === placeId);
 
   res.status(200).json({ message: "Deleted place" });

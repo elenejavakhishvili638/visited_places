@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import HttpError from "../models/http-error.js";
+import { validationResult } from "express-validator";
 
 const USERS = [
   {
@@ -17,6 +18,12 @@ export const getUsers = (req, res, next) => {
 };
 
 export const signup = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const errorMsgs = errors.array().map((error) => error.msg);
+    return next(new HttpError(errorMsgs.join(". "), 422));
+  }
+
   const { name, email, password } = req.body;
 
   const hasUser = USERS.find((user) => user.email === email);

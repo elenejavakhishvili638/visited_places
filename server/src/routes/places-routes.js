@@ -3,7 +3,7 @@ import {
   createPlace,
   deletePlace,
   getPlaceById,
-  getPlaceByUserId,
+  getPlacesByUserId,
   updatePlace,
 } from "../controllers/places-controller.js";
 
@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get("/:placeId", getPlaceById);
 
-router.get("/user/:userId", getPlaceByUserId);
+router.get("/user/:userId", getPlacesByUserId);
 
 router.post("/", createPlace);
 

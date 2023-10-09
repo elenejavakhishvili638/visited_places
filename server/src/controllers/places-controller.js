@@ -1,7 +1,7 @@
 import HttpError from "../models/http-error.js";
 import { v4 as uuidv4 } from "uuid";
 
-const DUMMY_PLACES = [
+let DUMMY_PLACES = [
   {
     id: "p1",
     name: "home",
@@ -41,17 +41,17 @@ export const getPlaceById = async (req, res, next) => {
   res.json({ place });
 };
 
-export const getPlaceByUserId = async (req, res, next) => {
+export const getPlacesByUserId = async (req, res, next) => {
   const userId = req.params.userId;
-  const place = DUMMY_PLACES.find((place) => place.userId === userId);
-  if (!place) {
+  const places = DUMMY_PLACES.filter((place) => place.userId === userId);
+  if (!places || places.length === 0) {
     const error = new HttpError(
       "Could not find a place for the provided ID.",
       404
     );
     return next(error);
   }
-  res.json({ place });
+  res.json({ places });
 };
 
 export const createPlace = async (req, res, next) => {

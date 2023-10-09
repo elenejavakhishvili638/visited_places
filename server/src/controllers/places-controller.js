@@ -87,4 +87,10 @@ export const updatePlace = async (req, res, next) => {
   res.status(200).json({ place: updatedPlace });
 };
 
-export const deletePlace = async (req, res, next) => {};
+export const deletePlace = async (req, res, next) => {
+  const placeId = req.params.placeId;
+
+  DUMMY_PLACES.filter((place) => place.id === placeId);
+
+  res.status(200).json({ message: "Deleted place" });
+};

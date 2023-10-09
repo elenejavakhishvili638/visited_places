@@ -6,6 +6,7 @@ import {
   getPlacesByUserId,
   updatePlace,
 } from "../controllers/places-controller.js";
+import { check } from "express-validator";
 
 const router = express.Router();
 
@@ -13,9 +14,28 @@ router.get("/:placeId", getPlaceById);
 
 router.get("/user/:userId", getPlacesByUserId);
 
-router.post("/", createPlace);
+router.post(
+  "/",
+  [
+    check("name").not().isEmpty().withMessage("Name cannot be empty"),
+    check("description")
+      .isLength({ min: 5 })
+      .withMessage("Description must be at least 5 characters long"),
+    check("address").not().isEmpty().withMessage("Address cannot be empty"),
+  ],
+  createPlace
+);
 
-router.patch("/:placeId", updatePlace);
+router.patch(
+  "/:placeId",
+  [
+    check("name").not().isEmpty().withMessage("Name cannot be empty"),
+    check("description")
+      .isLength({ min: 5 })
+      .withMessage("Description must be at least 5 characters long"),
+  ],
+  updatePlace
+);
 
 router.delete("/:placeId", deletePlace);
 

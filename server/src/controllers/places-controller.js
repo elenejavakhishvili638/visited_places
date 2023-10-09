@@ -1,5 +1,6 @@
 import HttpError from "../models/http-error.js";
 import { v4 as uuidv4 } from "uuid";
+import { validationResult } from "express-validator";
 
 let DUMMY_PLACES = [
   {
@@ -55,6 +56,13 @@ export const getPlacesByUserId = async (req, res, next) => {
 };
 
 export const createPlace = async (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    const errorMsgs = errors.array().map((error) => error.msg);
+    return next(new HttpError(errorMsgs.join(". "), 422));
+  }
+
   const { name, description, coordinates, address, userId } = req.body;
   const createdPlace = {
     id: uuidv4(),
@@ -71,6 +79,13 @@ export const createPlace = async (req, res, next) => {
 };
 
 export const updatePlace = async (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    const errorMsgs = errors.array().map((error) => error.msg);
+    return next(new HttpError(errorMsgs.join(". "), 422));
+  }
+
   const placeId = req.params.placeId;
   const { name, description } = req.body;
 

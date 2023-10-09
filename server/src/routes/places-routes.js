@@ -32,12 +32,22 @@ const DUMMY_PLACES = [
 router.get("/:placeId", async (req, res, next) => {
   const placeId = req.params.placeId;
   const place = DUMMY_PLACES.find((place) => place.id === placeId);
+  if (!place) {
+    const error = new Error("Could not find a place for the provided ID.");
+    error.status = 404;
+    return next(error);
+  }
   res.json({ place });
 });
 
 router.get("/user/:userId", async (req, res, next) => {
   const userId = req.params.userId;
   const place = DUMMY_PLACES.find((place) => place.userId === userId);
+  if (!place) {
+    const error = new Error("Could not find a place for the provided ID.");
+    error.status = 404;
+    return next(error);
+  }
   res.json({ place });
 });
 

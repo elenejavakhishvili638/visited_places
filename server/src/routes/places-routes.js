@@ -35,4 +35,10 @@ router.get("/:placeId", async (req, res, next) => {
   res.json({ place });
 });
 
+router.get("/user/:userId", async (req, res, next) => {
+  const userId = req.params.userId;
+  const place = DUMMY_PLACES.find((place) => place.userId === userId);
+  res.json({ place });
+});
+
 export { router as placeRouter };

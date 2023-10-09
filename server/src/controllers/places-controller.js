@@ -1,6 +1,7 @@
 import HttpError from "../models/http-error.js";
 import { v4 as uuidv4 } from "uuid";
 import { validationResult } from "express-validator";
+import getCoordsForAddress from "../util/location.js";
 
 let DUMMY_PLACES = [
   {
@@ -63,7 +64,16 @@ export const createPlace = async (req, res, next) => {
     return next(new HttpError(errorMsgs.join(". "), 422));
   }
 
-  const { name, description, coordinates, address, userId } = req.body;
+  const { name, description, address, userId } = req.body;
+
+  let coordinates;
+
+  try {
+    coordinates = await getCoordsForAddress(address);
+  } catch (error) {
+    return next(error);
+  }
+
   const createdPlace = {
     id: uuidv4(),
     name,

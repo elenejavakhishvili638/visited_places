@@ -69,3 +69,22 @@ export const createPlace = async (req, res, next) => {
 
   res.status(201).json({ place: createdPlace });
 };
+
+export const updatePlace = async (req, res, next) => {
+  const placeId = req.params.placeId;
+  const { name, description } = req.body;
+
+  const updatedPlace = {
+    ...DUMMY_PLACES.find((place) => place.id === placeId),
+  };
+  const placeIndex = DUMMY_PLACES.findIndex((place) => place.id === placeId);
+
+  updatedPlace.name = name;
+  updatedPlace.description = description;
+
+  DUMMY_PLACES[placeIndex] = updatedPlace;
+
+  res.status(200).json({ place: updatedPlace });
+};
+
+export const deletePlace = async (req, res, next) => {};

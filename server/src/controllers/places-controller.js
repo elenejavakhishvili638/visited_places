@@ -1,4 +1,5 @@
 import HttpError from "../models/http-error.js";
+import { v4 as uuidv4 } from "uuid";
 
 const DUMMY_PLACES = [
   {
@@ -51,4 +52,20 @@ export const getPlaceByUserId = async (req, res, next) => {
     return next(error);
   }
   res.json({ place });
+};
+
+export const createPlace = async (req, res, next) => {
+  const { name, description, coordinates, address, userId } = req.body;
+  const createdPlace = {
+    id: uuidv4(),
+    name,
+    description,
+    location: coordinates,
+    address,
+    userId,
+  };
+
+  DUMMY_PLACES.push(createdPlace);
+
+  res.status(201).json({ place: createdPlace });
 };

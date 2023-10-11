@@ -2,6 +2,8 @@ import HttpError from "../models/http-error.js";
 import { validationResult } from "express-validator";
 import getCoordsForAddress from "../util/location.js";
 import { PlaceModel } from "../models/place.js";
+import { UserModel } from "../models/user.js";
+import mongoose from "mongoose";
 
 export const getPlaceById = async (req, res, next) => {
   const placeId = req.params.placeId;
@@ -70,8 +72,24 @@ export const createPlace = async (req, res, next) => {
     address,
   });
 
+  let user;
   try {
-    await createdPlace.save();
+    user = await UserModel.findById(userId);
+  } catch (error) {
+    return next(new HttpError("Creating place failed, please try again", 500));
+  }
+
+  if (!user) {
+    return next(new HttpError("Could not find user for provided id.", 404));
+  }
+
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await createdPlace.save({ session: sess });
+    user.places.push(createdPlace);
+    await user.save({ session: sess });
+    await sess.commitTransaction();
   } catch (error) {
     const err = new HttpError(
       "Creating a place has failed, please try again",

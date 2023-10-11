@@ -9,7 +9,7 @@ const PlaceSchema = new mongoose.Schema({
     lat: { type: Number, required: true },
     lng: { type: Number, required: true },
   },
-  creator: { type: String, required: true },
+  userId: { type: String, required: true },
 });
 
 export const PlaceModel = mongoose.model("Place", PlaceSchema);

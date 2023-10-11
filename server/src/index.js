@@ -2,7 +2,10 @@ import express from "express";
 import { placeRouter } from "./routes/places-routes.js";
 import HttpError from "./models/http-error.js";
 import { userRouter } from "./routes/users-routes.js";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
+dotenv.config();
 const app = express();
 app.use(express.json());
 app.use("/api/places", placeRouter);
@@ -21,4 +24,13 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || "An unknown error occurred!" });
 });
 
-app.listen(5000, () => console.log("server"));
+mongoose
+  .connect(
+    `mongodb+srv://javakhishvilielene3:${process.env.MONGO_DB_PASSWORD}@visitedplaces.cbb3fxf.mongodb.net/visitedplaces?retryWrites=true&w=majority`
+  )
+  .then(() => {
+    app.listen(5000, () => console.log("server"));
+  })
+  .catch((error) => {
+    console.log(error);
+  });

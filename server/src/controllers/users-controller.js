@@ -21,7 +21,7 @@ export const signup = async (req, res, next) => {
     return next(new HttpError(errorMsgs.join(". "), 422));
   }
 
-  const { name, email, password, places } = req.body;
+  const { name, email, password } = req.body;
 
   let exisitingUser;
   try {
@@ -42,7 +42,7 @@ export const signup = async (req, res, next) => {
     password,
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5oK2ja7ky2VRqw37Oa18BDq6Jp3WAnBO4jJpqgUNefB3n2f_q8sljq3nqdhtxS44OR_8&usqp=CAU",
-    places,
+    places: [],
   });
 
   try {

@@ -1,57 +1,72 @@
-import { v4 as uuidv4 } from "uuid";
 import HttpError from "../models/http-error.js";
 import { validationResult } from "express-validator";
+import { UserModel } from "../models/user.js";
 
-const USERS = [
-  {
-    id: "u1",
-    name: "elene",
-    image:
-      "https://media.cntraveler.com/photos/5c2cfc9f6b0c2057eb60d579/16:9/w_1920%2Cc_limit/Edinburgh%2520Castle_GettyImages-157509228.jpg",
-    email: "elo@elo",
-    password: "123123",
-  },
-];
-
-export const getUsers = (req, res, next) => {
-  return res.json({ users: USERS });
+export const getUsers = async (req, res, next) => {
+  let users;
+  try {
+    users = await UserModel.find({}, "-password");
+  } catch (error) {
+    return next(new HttpError("There are no users", 500));
+  }
+  return res.json({
+    users: users.map((user) => user.toObject({ getters: true })),
+  });
 };
 
-export const signup = (req, res, next) => {
+export const signup = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const errorMsgs = errors.array().map((error) => error.msg);
     return next(new HttpError(errorMsgs.join(". "), 422));
   }
 
-  const { name, email, password } = req.body;
+  const { name, email, password, places } = req.body;
 
-  const hasUser = USERS.find((user) => user.email === email);
+  let exisitingUser;
+  try {
+    exisitingUser = await UserModel.findOne({ email });
+  } catch (error) {
+    return next(new HttpError("Signing up failed, please try again", 500));
+  }
 
-  if (hasUser) {
+  if (exisitingUser) {
     return next(
       new HttpError("Could not crate an user, email already exists", 422)
     );
   }
 
-  const createdUser = {
-    id: uuidv4(),
+  const createdUser = new UserModel({
     name,
     email,
     password,
-  };
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5oK2ja7ky2VRqw37Oa18BDq6Jp3WAnBO4jJpqgUNefB3n2f_q8sljq3nqdhtxS44OR_8&usqp=CAU",
+    places,
+  });
 
-  USERS.push(createdUser);
+  try {
+    await createdUser.save();
+  } catch (error) {
+    return next(
+      new HttpError("Creating an user has failed, please try again", 500)
+    );
+  }
 
-  res.status(201).json({ user: createdUser });
+  res.status(201).json({ user: createdUser.toObject({ getters: true }) });
 };
 
-export const login = (req, res, next) => {
+export const login = async (req, res, next) => {
   const { email, password } = req.body;
 
-  const foundUser = USERS.find((user) => user.email === email);
+  let exisitingUser;
+  try {
+    exisitingUser = await UserModel.findOne({ email });
+  } catch (error) {
+    return next(new HttpError("Logging in failed, please try again", 500));
+  }
 
-  if (!foundUser || foundUser.password !== password) {
+  if (!exisitingUser || exisitingUser.password !== password) {
     return next(
       new HttpError(
         "Could not identify user, credentials seem to be wrong",

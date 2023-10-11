@@ -1,35 +1,7 @@
 import HttpError from "../models/http-error.js";
-import { v4 as uuidv4 } from "uuid";
 import { validationResult } from "express-validator";
 import getCoordsForAddress from "../util/location.js";
 import { PlaceModel } from "../models/place.js";
-
-let DUMMY_PLACES = [
-  {
-    id: "p1",
-    name: "home",
-    description: "oneksdbkjsc",
-    image: "dnksjdkjb",
-    address: "djksd",
-    coordinates: {
-      lat: 48.8584,
-      lng: 2.2945,
-    },
-    userId: "u1",
-  },
-  {
-    id: "p2",
-    name: "homes",
-    description: "oneksdbkjsc",
-    image: "dnksjdkjb",
-    address: "djksd",
-    coordinates: {
-      lat: 48.8584,
-      lng: 2.2945,
-    },
-    userId: "u2",
-  },
-];
 
 export const getPlaceById = async (req, res, next) => {
   const placeId = req.params.placeId;
@@ -101,7 +73,6 @@ export const createPlace = async (req, res, next) => {
   try {
     await createdPlace.save();
   } catch (error) {
-    console.log(error);
     const err = new HttpError(
       "Creating a place has failed, please try again",
       500

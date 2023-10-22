@@ -2,6 +2,7 @@ import { createPortal } from "react-dom"
 import "./Modal.css"
 import { Backdrop } from "./Backdrop"
 import { CSSTransition } from "react-transition-group"
+import { forwardRef } from "react"
 
 type Props = {
     show: boolean
@@ -39,7 +40,8 @@ function Modal({ show, onCancel, className, style, headerClass, onSubmit, childr
                 mountOnEnter
                 unmountOnExit
                 timeout={200}
-                classNames="modal">
+                classNames="modal"
+            >
                 <ModalOverlay
                     className={className}
                     style={style}
@@ -57,9 +59,9 @@ function Modal({ show, onCancel, className, style, headerClass, onSubmit, childr
 
 }
 
-const ModalOverlay = ({ className, style, headerClass, onSubmit, children, contentClass, footerClass, footer, header }: CompProps) => {
+const ModalOverlay = forwardRef<HTMLDivElement, CompProps>(({ className, style, headerClass, onSubmit, children, contentClass, footerClass, footer, header }: CompProps, ref) => {
     const content = (
-        <div className={`modal ${className}`} style={style}>
+        <div ref={ref} className={`modal ${className}`} style={style}>
             <header className={`modal__header ${headerClass}`}>
                 <h2>{header}</h2>
             </header>
@@ -74,6 +76,5 @@ const ModalOverlay = ({ className, style, headerClass, onSubmit, children, conte
         </div>
     );
     return createPortal(content, document.getElementById('modal')!)
-}
-
+})
 export default Modal

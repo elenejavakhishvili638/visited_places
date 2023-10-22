@@ -29,11 +29,37 @@ const Auth = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
+        setIsLoading(true)
         if (isLogin) {
-            console.log(formState.inputs)
+            try {
+                const response = await fetch("http://localhost:5000/api/users/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "Application/json"
+                    },
+                    body: JSON.stringify({
+                        email: formState.inputs.email?.value,
+                        password: formState.inputs.password?.value
+                    })
+                })
+
+                const responseData = await response.json()
+                if (!response.ok) {
+                    throw new Error(responseData.message)
+                }
+                setIsLoading(false)
+                auth.login()
+                navigate("/")
+            } catch (error) {
+                setIsLoading(false)
+                if (error instanceof Error) {
+                    setError(error.message || "Something went wrong, please try again.");
+                } else {
+                    setError("Something went wrong, please try again.");
+                }
+            }
         } else {
             try {
-                setIsLoading(true)
                 const response = await fetch("http://localhost:5000/api/users/signup", {
                     method: "POST",
                     headers: {
@@ -47,7 +73,7 @@ const Auth = () => {
                 })
 
                 const responseData = await response.json()
-                if (!responseData.ok) {
+                if (!response.ok) {
                     throw new Error(responseData.message)
                 }
                 setIsLoading(false)

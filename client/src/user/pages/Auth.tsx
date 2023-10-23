@@ -10,6 +10,7 @@ import { useNavigate } from "react-router"
 import ErrorModal from "../../shared/components/UiElements/ErrorModal"
 import LoadingSpinner from "../../shared/components/UiElements/LoadingSpinner"
 import { useHttpClient } from "../../shared/hooks/http-hook"
+import ImageUplaod from "../../shared/components/FormElements/ImageUplaod"
 
 const Auth = () => {
     const [isLogin, setIsLogin] = useState<boolean>(true)
@@ -92,15 +93,18 @@ const Auth = () => {
                 <form onSubmit={handleSubmit}>
                     {
                         !isLogin && (
-                            <Input
-                                type="text"
-                                elementType="input"
-                                id="name"
-                                label="Your name"
-                                validators={[VALIDATOR_REQUIRE()]}
-                                onInput={inputHandle}
-                                errorText="Please enter your name"
-                            />
+                            <>
+                                <Input
+                                    type="text"
+                                    elementType="input"
+                                    id="name"
+                                    label="Your name"
+                                    validators={[VALIDATOR_REQUIRE()]}
+                                    onInput={inputHandle}
+                                    errorText="Please enter your name"
+                                />
+                                <ImageUplaod id="image" center />
+                            </>
                         )
                     }
                     <Input

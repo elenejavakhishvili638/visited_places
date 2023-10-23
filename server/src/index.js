@@ -4,10 +4,13 @@ import HttpError from "./models/http-error.js";
 import { userRouter } from "./routes/users-routes.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import path from "path";
 
 dotenv.config();
 const app = express();
 app.use(express.json());
+
+app.use("/uploads/images", express.static(path.join("uploads", "images")));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");

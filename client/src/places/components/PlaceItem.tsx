@@ -6,6 +6,9 @@ import "./PlaceItem.css"
 import Modal from "../../shared/components/UiElements/Modal"
 import Map from "../../shared/components/UiElements/Map"
 import { AuthContext } from "../../shared/context/AuthContext"
+import { useHttpClient } from "../../shared/hooks/http-hook"
+import ErrorModal from "../../shared/components/UiElements/ErrorModal"
+import LoadingSpinner from "../../shared/components/UiElements/LoadingSpinner"
 
 type Props = {
     image: string,
@@ -13,30 +16,41 @@ type Props = {
     description: string,
     address: string,
     coordinates: Location,
-    id: string
+    id: string,
+    onDelete: (deletedPlaceId: string) => void
 }
 
 const PlaceItem = (props: Props) => {
-
+    const { error, isLoading, handleError, sendRequest } = useHttpClient()
     const [showMap, setShowMap] = useState<boolean>(false)
     const [showConfirm, setShowConfirm] = useState<boolean>(false)
+    const { image, description, name, address, id, coordinates, onDelete } = props
     const auth = useContext(AuthContext)
 
     const openMap = () => setShowMap(true)
     const closeMap = () => setShowMap(false)
 
     const showDeleteWarning = () => setShowConfirm(true)
+
     const closeDeleteWarning = () => setShowConfirm(false)
-    const handleDelete = () => {
+
+    const handleDelete = async () => {
         setShowConfirm(false)
-        console.log("delete")
+        // console.log("delete")
+        try {
+            await sendRequest(`http://localhost:5000/api/places/${id}`, "DELETE")
+            onDelete(id)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
 
 
-    const { image, description, name, address, id, coordinates } = props
     return (
         <>
+            {isLoading && <LoadingSpinner asOverlay />}
+            <ErrorModal error={error} onClear={handleError} />
             <Modal
                 show={showMap}
                 onCancel={closeMap}

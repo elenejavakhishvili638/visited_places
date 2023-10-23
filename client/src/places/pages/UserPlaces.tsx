@@ -23,10 +23,14 @@ const UserPlaces = () => {
         fetchUsers()
     }, [sendRequest, userId])
 
+    const handleDelete = (deletedPlaceId: string) => {
+        setPlaces(prevPlaces => prevPlaces.filter(place => place.id !== deletedPlaceId))
+    }
+
     return (
         <>
             <ErrorModal error={error} onClear={handleError} />
-            {isLoading ? <LoadingSpinner asOverlay /> : <PlaceList places={places} />}
+            {isLoading ? <LoadingSpinner asOverlay /> : <PlaceList places={places} onDeletePlace={handleDelete} />}
         </>
     )
 }

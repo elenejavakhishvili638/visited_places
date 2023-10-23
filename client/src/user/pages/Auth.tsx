@@ -9,11 +9,10 @@ import { AuthContext } from "../../shared/context/AuthContext"
 import { useNavigate } from "react-router"
 import ErrorModal from "../../shared/components/UiElements/ErrorModal"
 import LoadingSpinner from "../../shared/components/UiElements/LoadingSpinner"
+import { useHttpClient } from "../../shared/hooks/http-hook"
 
 const Auth = () => {
     const [isLogin, setIsLogin] = useState<boolean>(true)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [error, setError] = useState<string>("")
     const auth = useContext(AuthContext)
     const navigate = useNavigate()
     const [formState, inputHandle, setFormData] = useForm({
@@ -26,66 +25,40 @@ const Auth = () => {
             isValid: false
         }
     }, false)
+    const { isLoading, error, handleError, sendRequest } = useHttpClient()
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        setIsLoading(true)
         if (isLogin) {
             try {
-                const response = await fetch("http://localhost:5000/api/users/login", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "Application/json"
-                    },
-                    body: JSON.stringify({
+                await sendRequest("http://localhost:5000/api/users/login", "POST",
+                    JSON.stringify({
                         email: formState.inputs.email?.value,
                         password: formState.inputs.password?.value
-                    })
-                })
-
-                const responseData = await response.json()
-                if (!response.ok) {
-                    throw new Error(responseData.message)
-                }
-                setIsLoading(false)
+                    }),
+                    {
+                        "Content-Type": "Application/json"
+                    },
+                )
                 auth.login()
                 navigate("/")
             } catch (error) {
-                setIsLoading(false)
-                if (error instanceof Error) {
-                    setError(error.message || "Something went wrong, please try again.");
-                } else {
-                    setError("Something went wrong, please try again.");
-                }
+                console.log(error)
             }
         } else {
             try {
-                const response = await fetch("http://localhost:5000/api/users/signup", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "Application/json"
-                    },
-                    body: JSON.stringify({
+                await sendRequest("http://localhost:5000/api/users/signup", "POST",
+                    JSON.stringify({
                         name: formState.inputs.name?.value,
                         email: formState.inputs.email?.value,
                         password: formState.inputs.password?.value
-                    })
-                })
-
-                const responseData = await response.json()
-                if (!response.ok) {
-                    throw new Error(responseData.message)
-                }
-                setIsLoading(false)
+                    }),
+                    { "Content-Type": "Application/json" },
+                )
                 auth.login()
                 navigate("/")
             } catch (error) {
-                setIsLoading(false)
-                if (error instanceof Error) {
-                    setError(error.message || "Something went wrong, please try again.");
-                } else {
-                    setError("Something went wrong, please try again.");
-                }
+                console.log(error)
             }
         }
 
@@ -109,9 +82,6 @@ const Auth = () => {
         setIsLogin(prevValue => !prevValue)
     }
 
-    const handleError = () => {
-        setError("")
-    }
     return (
         <>
             <ErrorModal error={error} onClear={handleError} />

@@ -1,4 +1,4 @@
-import { useCallback, useState, useRef, useEffect } from "react"
+import { useCallback, useState, useEffect, useRef } from "react"
 
 
 export const useHttpClient = () => {
@@ -7,17 +7,17 @@ export const useHttpClient = () => {
 
     const activeHttpRequest = useRef<AbortController[]>([])
 
-    const sendRequest = useCallback(async (url: string, method = "GET", body = null, headers = {}) => {
+    const sendRequest = useCallback(async (url: string, method = "GET", body: string | null = null, headers = {}) => {
         setIsLoading(true)
-        const httpAbortCtrll = new AbortController();
-        activeHttpRequest.current.push(httpAbortCtrll)
-        try {
+        const httpAbortCtrl = new AbortController();
+        activeHttpRequest.current.push(httpAbortCtrl)
 
+        try {
             const response = await fetch(url, {
                 method,
                 headers,
                 body,
-                signal: httpAbortCtrll.signal
+                signal: httpAbortCtrl.signal
             })
 
             const responseData = await response.json()
@@ -25,13 +25,20 @@ export const useHttpClient = () => {
                 throw new Error(responseData.message)
             }
             setIsLoading(false)
+
             return responseData
         } catch (error) {
             setIsLoading(false)
+            if (error instanceof Error && error.name === 'AbortError') {
+                console.log("Fetch was aborted");
+                return;
+            }
             if (error instanceof Error) {
                 setError(error.message || "Something went wrong, please try again.");
+                throw error
             } else {
                 setError("Something went wrong, please try again.");
+                throw error
             }
         }
     }, [])

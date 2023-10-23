@@ -5,39 +5,19 @@ import Input from "../../shared/components/FormElements/Input"
 import Button from "../../shared/components/FormElements/Button"
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../shared/util/validators"
 import { useForm } from "../../shared/hooks/form-hook"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Card from "../../shared/components/UiElements/Card"
-
-const DUMMY_PLACES: Place[] = [
-    {
-        id: "p1",
-        name: "home",
-        description: "oneksdbkjsc",
-        image: "dnksjdkjb",
-        address: "djksd",
-        coordinates: {
-            lat: 48.8584,
-            lng: 2.2945
-        },
-        userId: "u1"
-    },
-    {
-        id: "p2",
-        name: "homes",
-        description: "oneksdbkjsc",
-        image: "dnksjdkjb",
-        address: "djksd",
-        coordinates: {
-            lat: 48.8584,
-            lng: 2.2945
-        },
-        userId: "u2"
-    }
-]
+import { useHttpClient } from "../../shared/hooks/http-hook"
+import ErrorModal from "../../shared/components/UiElements/ErrorModal"
+import LoadingSpinner from "../../shared/components/UiElements/LoadingSpinner"
+import { useNavigate } from "react-router"
+import { AuthContext } from "../../shared/context/AuthContext"
 
 function UpdatePlace() {
     const { placeId } = useParams()
-    const [loading, setLoading] = useState<boolean>(true)
+    const [foundPlace, setFoundPlace] = useState<Place>()
+    const { error, handleError, sendRequest, isLoading } = useHttpClient()
+    const auth = useContext(AuthContext)
     const [formState, inputHandle, setFormData] = useForm({
         title: {
             value: "",
@@ -48,29 +28,45 @@ function UpdatePlace() {
             isValid: false
         },
     }, false)
+    const navigate = useNavigate()
 
-    const foundPlace = DUMMY_PLACES.find((place) => place.id === placeId)
 
     useEffect(() => {
-        if (foundPlace) {
-            setFormData({
-                title: {
-                    value: foundPlace!.name,
-                    isValid: true
-                },
-                description: {
-                    value: foundPlace!.description,
-                    isValid: true
-                },
-            }, true)
+        const fetchUsers = async () => {
+            try {
+                const response = await sendRequest(`http://localhost:5000/api/places/${placeId}`)
+                setFoundPlace(response.place)
+                setFormData({
+                    title: {
+                        value: response.place.name,
+                        isValid: true
+                    },
+                    description: {
+                        value: response.place.description,
+                        isValid: true
+                    },
+                }, true)
+            } catch (error) {
+                console.log(error)
+            }
         }
-        setLoading(false)
-    }, [foundPlace, setFormData])
+        fetchUsers()
+    }, [placeId, sendRequest, setFormData])
 
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        console.log(formState.inputs)
+        try {
+            sendRequest(
+                `http://localhost:5000/api/places/${placeId}`, "PATCH", JSON.stringify({
+                    name: formState.inputs.title?.value,
+                    description: formState.inputs.description?.value
+                }), { "Content-Type": "Application/json" }
+            )
+            navigate(`/${auth.userId}/places`)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
 
@@ -86,8 +82,10 @@ function UpdatePlace() {
 
     return (
         <>
+            <ErrorModal error={error} onClear={handleError} />
+            {isLoading && <LoadingSpinner asOverlay />}
             {
-                !loading && (
+                !isLoading && foundPlace && (
                     <form className="place-form" onSubmit={handleSubmit}>
                         <Input
                             id="title"

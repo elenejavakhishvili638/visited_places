@@ -24,6 +24,10 @@ const Auth = () => {
         password: {
             value: "",
             isValid: false
+        },
+        image: {
+            value: "",
+            isValid: false
         }
     }, false)
     const { isLoading, error, handleError, sendRequest } = useHttpClient()
@@ -70,11 +74,18 @@ const Auth = () => {
             setFormData({
                 ...formState.inputs,
                 name: undefined,
-            }, formState.inputs.email!.isValid && formState.inputs.password!.isValid)
+                image: undefined
+            },
+                formState.inputs.email!.isValid && formState.inputs.password!.isValid
+            )
         } else {
             setFormData({
                 ...formState.inputs,
                 name: {
+                    value: "",
+                    isValid: false
+                },
+                image: {
                     value: "",
                     isValid: false
                 }
@@ -103,7 +114,7 @@ const Auth = () => {
                                     onInput={inputHandle}
                                     errorText="Please enter your name"
                                 />
-                                <ImageUplaod id="image" center />
+                                <ImageUplaod id="image" center onInput={inputHandle} errorText="" />
                             </>
                         )
                     }

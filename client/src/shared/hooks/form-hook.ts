@@ -1,9 +1,9 @@
 import { useCallback, useReducer } from "react"
 
-type InputKeys = 'title' | 'description' | 'address' | 'email' | 'password' | 'name';
+type InputKeys = 'title' | 'description' | 'address' | 'email' | 'password' | 'name' | 'image';
 
 type InputData = {
-    value: string;
+    value: string | File;
     isValid: boolean;
 };
 
@@ -19,7 +19,7 @@ type FormAction = {
     type: "INPUT_CHANGE";
     inputId: string,
     isValid: boolean,
-    value: string
+    value: string | File
 } | {
     type: 'SET_DATA',
     inputs: FormInputs,
@@ -58,7 +58,7 @@ const formReducer = (state: FormState, action: FormAction) => {
 }
 
 
-type UseFormReturnType = [FormState, (id: string, value: string, valid: boolean) => void, (inputData: FormInputs, formValidity: boolean) => void];
+type UseFormReturnType = [FormState, (id: string, value: string | File, valid: boolean) => void, (inputData: FormInputs, formValidity: boolean) => void];
 
 
 export const useForm = (initialInputs: FormInputs, initialValidity: boolean): UseFormReturnType => {
@@ -68,7 +68,7 @@ export const useForm = (initialInputs: FormInputs, initialValidity: boolean): Us
         isValid: initialValidity
     })
 
-    const inputHandle = useCallback((id: string, value: string, valid: boolean) => {
+    const inputHandle = useCallback((id: string, value: string | File, valid: boolean) => {
         dispatch({ type: "INPUT_CHANGE", value, isValid: valid, inputId: id })
     }, [])
 

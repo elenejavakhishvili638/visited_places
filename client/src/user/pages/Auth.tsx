@@ -31,7 +31,7 @@ const Auth = () => {
         event.preventDefault()
         if (isLogin) {
             try {
-                await sendRequest("http://localhost:5000/api/users/login", "POST",
+                const response = await sendRequest("http://localhost:5000/api/users/login", "POST",
                     JSON.stringify({
                         email: formState.inputs.email?.value,
                         password: formState.inputs.password?.value
@@ -40,14 +40,14 @@ const Auth = () => {
                         "Content-Type": "Application/json"
                     },
                 )
-                auth.login()
+                auth.login(response.user.id)
                 navigate("/")
             } catch (error) {
                 console.log(error)
             }
         } else {
             try {
-                await sendRequest("http://localhost:5000/api/users/signup", "POST",
+                const response = await sendRequest("http://localhost:5000/api/users/signup", "POST",
                     JSON.stringify({
                         name: formState.inputs.name?.value,
                         email: formState.inputs.email?.value,
@@ -55,7 +55,7 @@ const Auth = () => {
                     }),
                     { "Content-Type": "Application/json" },
                 )
-                auth.login()
+                auth.login(response.user.id)
                 navigate("/")
             } catch (error) {
                 console.log(error)

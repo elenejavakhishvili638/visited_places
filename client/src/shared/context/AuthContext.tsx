@@ -2,14 +2,16 @@ import { createContext, useCallback, useState } from "react";
 
 type AuthContextType = {
     isLoggedIn: boolean,
-    login: () => void,
+    login: (uid: string) => void,
     logout: () => void,
+    userId: string | null,
 };
 
 const AuthContext = createContext<AuthContextType>({
     isLoggedIn: false,
     login: () => { },
-    logout: () => { }
+    logout: () => { },
+    userId: null
 });
 
 interface AuthProviderProps {
@@ -18,19 +20,22 @@ interface AuthProviderProps {
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
+    const [userId, setUserId] = useState<string | null>("")
 
-    const login = useCallback(() => {
+    const login = useCallback((uid: string) => {
         setIsLoggedIn(true)
+        setUserId(uid)
     }, [])
 
     const logout = useCallback(() => {
         setIsLoggedIn(false)
+        setUserId(null)
     }, [])
 
 
     return (
         <AuthContext.Provider
-            value={{ login, logout, isLoggedIn }}
+            value={{ login, logout, isLoggedIn, userId }}
         >
             {children}
         </AuthContext.Provider>

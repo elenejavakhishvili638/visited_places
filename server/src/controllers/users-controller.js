@@ -75,5 +75,8 @@ export const login = async (req, res, next) => {
     );
   }
 
-  res.json({ message: "Logged in" });
+  res.json({
+    message: "Logged in",
+    user: exisitingUser.toObject({ getters: true }),
+  });
 };

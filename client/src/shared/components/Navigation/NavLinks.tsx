@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import "./NavLinks.css"
-import { NavLink } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import { AuthContext } from "../../context/AuthContext"
 
 type Props = {
@@ -9,6 +9,7 @@ type Props = {
 
 function NavLinks({ closeDrawer }: Props) {
     const auth = useContext(AuthContext)
+    const navigate = useNavigate()
     return (
         <ul className="nav-links">
             <li>
@@ -31,7 +32,10 @@ function NavLinks({ closeDrawer }: Props) {
             )}
             {auth.isLoggedIn && (
                 <li>
-                    <button onClick={auth.logout}>LOGOUT</button>
+                    <button onClick={() => {
+                        auth.logout
+                        navigate("/auth")
+                    }}>LOGOUT</button>
                 </li>
             )}
         </ul>

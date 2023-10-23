@@ -17,14 +17,15 @@ type Props = {
     address: string,
     coordinates: Location,
     id: string,
-    onDelete: (deletedPlaceId: string) => void
+    onDelete: (deletedPlaceId: string) => void,
+    creator: string
 }
 
 const PlaceItem = (props: Props) => {
     const { error, isLoading, handleError, sendRequest } = useHttpClient()
     const [showMap, setShowMap] = useState<boolean>(false)
     const [showConfirm, setShowConfirm] = useState<boolean>(false)
-    const { image, description, name, address, id, coordinates, onDelete } = props
+    const { image, description, name, address, id, coordinates, onDelete, creator } = props
     const auth = useContext(AuthContext)
 
     const openMap = () => setShowMap(true)
@@ -36,7 +37,6 @@ const PlaceItem = (props: Props) => {
 
     const handleDelete = async () => {
         setShowConfirm(false)
-        // console.log("delete")
         try {
             await sendRequest(`http://localhost:5000/api/places/${id}`, "DELETE")
             onDelete(id)
@@ -90,7 +90,7 @@ const PlaceItem = (props: Props) => {
                     </div>
                     <div className="place-item__actions">
                         <Button inverse onClick={openMap}>VIEW ON A MAP</Button>
-                        {auth.isLoggedIn && (
+                        {auth.userId === creator && (
                             <>
                                 <Button to={`/places/${id}`}>EDIT</Button>
                                 <Button danger onClick={showDeleteWarning}>DELETE</Button>

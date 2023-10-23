@@ -5,7 +5,7 @@ export type Place = {
     userId: string,
     description: string,
     address: string,
-    coordinates: Location
+    location: Location
 }
 
 export type Location = {

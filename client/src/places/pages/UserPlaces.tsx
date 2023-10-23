@@ -1,38 +1,34 @@
+import { useHttpClient } from "../../shared/hooks/http-hook"
 import { Place } from "../../types/placeTypes"
 import PlaceList from "../components/PlaceList"
 import { useParams } from "react-router"
-
-const DUMMY_PLACES: Place[] = [
-    {
-        id: "p1",
-        name: "home",
-        description: "oneksdbkjsc",
-        image: "dnksjdkjb",
-        address: "djksd",
-        coordinates: {
-            lat: 48.8584,
-            lng: 2.2945
-        },
-        userId: "u1"
-    },
-    {
-        id: "p2",
-        name: "homes",
-        description: "oneksdbkjsc",
-        image: "dnksjdkjb",
-        address: "djksd",
-        coordinates: {
-            lat: 48.8584,
-            lng: 2.2945
-        },
-        userId: "u2"
-    }
-]
+import { useEffect, useState } from "react"
+import ErrorModal from "../../shared/components/UiElements/ErrorModal"
+import LoadingSpinner from "../../shared/components/UiElements/LoadingSpinner"
 
 const UserPlaces = () => {
+    const [places, setPlaces] = useState<Place[]>([])
+    const { isLoading, error, handleError, sendRequest } = useHttpClient()
     const { userId } = useParams()
-    const userPlaces = DUMMY_PLACES.filter((place) => place.userId === userId)
-    return <PlaceList places={userPlaces} />
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await sendRequest(`http://localhost:5000/api/places/user/${userId}`)
+                setPlaces(response.places)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        fetchUsers()
+    }, [sendRequest, userId])
+
+    return (
+        <>
+            <ErrorModal error={error} onClear={handleError} />
+            {isLoading ? <LoadingSpinner asOverlay /> : <PlaceList places={places} />}
+        </>
+    )
 }
 
 export default UserPlaces

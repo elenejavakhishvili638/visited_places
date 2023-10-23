@@ -17,7 +17,7 @@ function NavLinks({ closeDrawer }: Props) {
             {auth.isLoggedIn && (
                 <>
                     <li>
-                        <NavLink to="/u2/places" onClick={closeDrawer}>MY PLACES</NavLink>
+                        <NavLink to={`/${auth.userId}/places`} onClick={closeDrawer}>MY PLACES</NavLink>
                     </li>
                     <li>
                         <NavLink to="/places/new" onClick={closeDrawer}>ADD PLACES</NavLink>

@@ -52,13 +52,21 @@ const Auth = () => {
             }
         } else {
             try {
+                const formData = new FormData()
+                if (formState.inputs.email?.value) {
+                    formData.append("email", formState.inputs.email?.value)
+                }
+                if (formState.inputs.name?.value) {
+                    formData.append("name", formState.inputs.name?.value)
+                }
+                if (formState.inputs.password?.value) {
+                    formData.append("password", formState.inputs.password?.value)
+                }
+                if (formState.inputs.image?.value) {
+                    formData.append("image", formState.inputs.image?.value)
+                }
                 const response = await sendRequest("http://localhost:5000/api/users/signup", "POST",
-                    JSON.stringify({
-                        name: formState.inputs.name?.value,
-                        email: formState.inputs.email?.value,
-                        password: formState.inputs.password?.value
-                    }),
-                    { "Content-Type": "Application/json" },
+                    formData
                 )
                 auth.login(response.user.id)
                 navigate("/")

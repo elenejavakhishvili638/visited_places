@@ -32,7 +32,7 @@ export const signup = async (req, res, next) => {
 
   if (exisitingUser) {
     return next(
-      new HttpError("Could not crate an user, email already exists", 422)
+      new HttpError("Could not create an user, email already exists", 422)
     );
   }
 
@@ -40,8 +40,7 @@ export const signup = async (req, res, next) => {
     name,
     email,
     password,
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5oK2ja7ky2VRqw37Oa18BDq6Jp3WAnBO4jJpqgUNefB3n2f_q8sljq3nqdhtxS44OR_8&usqp=CAU",
+    image: req.file.path,
     places: [],
   });
 

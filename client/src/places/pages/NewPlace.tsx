@@ -72,7 +72,7 @@ const NewPlace = () => {
                     errorText="Please enter a valid value"
                     validators={[VALIDATOR_REQUIRE()]}
                 />
-                <ImageUplaod id="image" center={false} onInput={inputHandle} errorText="" />
+                <ImageUplaod id="image" center={false} onInput={inputHandle} errorText="Please provide an image" />
                 <Input
                     id="description"
                     onInput={inputHandle}

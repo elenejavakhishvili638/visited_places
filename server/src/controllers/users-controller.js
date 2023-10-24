@@ -2,6 +2,7 @@ import HttpError from "../models/http-error.js";
 import { validationResult } from "express-validator";
 import { UserModel } from "../models/user.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const getUsers = async (req, res, next) => {
   let users;
@@ -62,7 +63,22 @@ export const signup = async (req, res, next) => {
     );
   }
 
-  res.status(201).json({ user: createdUser.toObject({ getters: true }) });
+  let token;
+  try {
+    token = jwt.sign(
+      { userId: createdUser.id, email: createdUser.email },
+      "secret",
+      { expiresIn: "1h" }
+    );
+  } catch (error) {
+    return next(
+      new HttpError("Creating an user has failed, please try again", 500)
+    );
+  }
+
+  res
+    .status(201)
+    .json({ userId: createdUser.id, email: createdUser.email, token });
 };
 
 export const login = async (req, res, next) => {
@@ -105,8 +121,22 @@ export const login = async (req, res, next) => {
     );
   }
 
+  let token;
+  try {
+    token = jwt.sign(
+      { userId: exisitingUser.id, email: exisitingUser.email },
+      "secret",
+      { expiresIn: "1h" }
+    );
+  } catch (error) {
+    return next(
+      new HttpError("Creating an user has failed, please try again", 500)
+    );
+  }
+
   res.json({
-    message: "Logged in",
-    user: exisitingUser.toObject({ getters: true }),
+    userId: exisitingUser.id,
+    email: exisitingUser.email,
+    token,
   });
 };

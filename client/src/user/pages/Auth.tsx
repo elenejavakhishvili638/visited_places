@@ -41,7 +41,7 @@ const Auth = () => {
                         "Content-Type": "Application/json"
                     },
                 )
-                auth.login(response.user.id)
+                auth.login(response.userId)
                 navigate("/")
             } catch (error) {
                 console.log(error)
@@ -64,7 +64,7 @@ const Auth = () => {
                 const response = await sendRequest("http://localhost:5000/api/users/signup", "POST",
                     formData
                 )
-                auth.login(response.user.id)
+                auth.login(response.userId)
                 navigate("/")
             } catch (error) {
                 console.log(error)
@@ -98,7 +98,6 @@ const Auth = () => {
         setIsLogin(prevValue => !prevValue)
     }
 
-    console.log(formState)
     return (
         <>
             <ErrorModal error={error} onClear={handleError} />

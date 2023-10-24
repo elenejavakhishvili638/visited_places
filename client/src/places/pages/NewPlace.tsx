@@ -9,6 +9,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../shared/context/AuthContext";
 import LoadingSpinner from "../../shared/components/UiElements/LoadingSpinner";
 import { useNavigate } from "react-router"
+import ImageUplaod from "../../shared/components/FormElements/ImageUplaod";
 
 const NewPlace = () => {
     const [formState, inputHandle] = useForm({
@@ -32,13 +33,24 @@ const NewPlace = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         try {
-            sendRequest(
-                "http://localhost:5000/api/places", "POST", JSON.stringify({
-                    name: formState.inputs.title?.value,
-                    description: formState.inputs.description?.value,
-                    address: formState.inputs.address?.value,
-                    userId: userId
-                }), { "Content-Type": "Application/json" }
+            const formData = new FormData()
+            if (formState.inputs.title?.value) {
+                formData.append("name", formState.inputs.title?.value)
+            }
+            if (formState.inputs.description?.value) {
+                formData.append("description", formState.inputs.description?.value)
+            }
+            if (formState.inputs.address?.value) {
+                formData.append("address", formState.inputs.address?.value)
+            }
+            if (formState.inputs.image?.value) {
+                formData.append("image", formState.inputs.image?.value)
+            }
+            if (userId) {
+                formData.append("userId", userId)
+            }
+            await sendRequest(
+                "http://localhost:5000/api/places", "POST", formData
             )
             navigate(`/${userId}/places`)
         } catch (error) {
@@ -60,6 +72,7 @@ const NewPlace = () => {
                     errorText="Please enter a valid value"
                     validators={[VALIDATOR_REQUIRE()]}
                 />
+                <ImageUplaod id="image" center={false} onInput={inputHandle} errorText="" />
                 <Input
                     id="description"
                     onInput={inputHandle}

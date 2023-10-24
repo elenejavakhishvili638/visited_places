@@ -7,6 +7,7 @@ import {
   updatePlace,
 } from "../controllers/places-controller.js";
 import { check } from "express-validator";
+import { upload } from "../middleware/file-upload.js";
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ router.get("/user/:userId", getPlacesByUserId);
 
 router.post(
   "/",
+  upload.single("image"),
   [
     check("name").not().isEmpty().withMessage("Name cannot be empty"),
     check("description")

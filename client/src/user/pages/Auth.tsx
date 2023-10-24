@@ -25,10 +25,6 @@ const Auth = () => {
             value: "",
             isValid: false
         },
-        image: {
-            value: "",
-            isValid: false
-        }
     }, false)
     const { isLoading, error, handleError, sendRequest } = useHttpClient()
 
@@ -102,6 +98,7 @@ const Auth = () => {
         setIsLogin(prevValue => !prevValue)
     }
 
+    console.log(formState)
     return (
         <>
             <ErrorModal error={error} onClear={handleError} />

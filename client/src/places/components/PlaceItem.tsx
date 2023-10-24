@@ -81,7 +81,7 @@ const PlaceItem = (props: Props) => {
             <li className="place-item">
                 <Card className="place-item__content">
                     <div className="place-item__image">
-                        <img src={image} alt={name} />
+                        <img src={"http://localhost:5000/" + image} alt={name} />
                     </div>
                     <div>
                         <h2>{name}</h2>

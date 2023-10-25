@@ -1,4 +1,4 @@
-import { createContext, useCallback, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 
 type AuthContextType = {
     isLoggedIn: boolean,
@@ -27,12 +27,24 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const login = useCallback((uid: string, token: string) => {
         setToken(token)
         setUserId(uid)
+        localStorage.setItem("userData", JSON.stringify({ userId: uid, token }))
     }, [])
 
     const logout = useCallback(() => {
+        localStorage.removeItem("userId")
         setToken(null)
         setUserId(null)
     }, [])
+
+    useEffect(() => {
+        const storedData = localStorage.getItem("userData")
+        if (storedData) {
+            const data = JSON.parse(storedData)
+            if (data && data.token) {
+                login(data.userId, data.token)
+            }
+        }
+    }, [login])
 
 
     return (

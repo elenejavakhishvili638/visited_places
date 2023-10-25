@@ -33,7 +33,7 @@ function NavLinks({ closeDrawer }: Props) {
             {auth.isLoggedIn && (
                 <li>
                     <button onClick={() => {
-                        auth.logout
+                        auth.logout()
                         navigate("/auth")
                     }}>LOGOUT</button>
                 </li>

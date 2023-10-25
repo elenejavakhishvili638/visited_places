@@ -61,7 +61,7 @@ function UpdatePlace() {
                 `http://localhost:5000/api/places/${placeId}`, "PATCH", JSON.stringify({
                     name: formState.inputs.title?.value,
                     description: formState.inputs.description?.value
-                }), { "Content-Type": "Application/json" }
+                }), { "Content-Type": "Application/json", "Authorization": "Bearer " + auth.token }
             )
             navigate(`/${auth.userId}/places`)
         } catch (error) {

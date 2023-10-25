@@ -27,7 +27,7 @@ const NewPlace = () => {
         }
     }, false)
     const { isLoading, error, sendRequest, handleError } = useHttpClient()
-    const { userId } = useContext(AuthContext)
+    const { userId, token } = useContext(AuthContext)
     const navigate = useNavigate()
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -50,7 +50,9 @@ const NewPlace = () => {
                 formData.append("userId", userId)
             }
             await sendRequest(
-                "http://localhost:5000/api/places", "POST", formData
+                "http://localhost:5000/api/places", "POST", formData, {
+                "Authorization": "Bearer " + token
+            }
             )
             navigate(`/${userId}/places`)
         } catch (error) {

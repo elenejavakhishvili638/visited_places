@@ -41,7 +41,7 @@ const Auth = () => {
                         "Content-Type": "Application/json"
                     },
                 )
-                auth.login(response.userId)
+                auth.login(response.userId, response.token)
                 navigate("/")
             } catch (error) {
                 console.log(error)
@@ -64,7 +64,7 @@ const Auth = () => {
                 const response = await sendRequest("http://localhost:5000/api/users/signup", "POST",
                     formData
                 )
-                auth.login(response.userId)
+                auth.login(response.userId, response.token)
                 navigate("/")
             } catch (error) {
                 console.log(error)

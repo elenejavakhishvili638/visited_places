@@ -57,7 +57,7 @@ function UpdatePlace() {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         try {
-            sendRequest(
+            await sendRequest(
                 `http://localhost:5000/api/places/${placeId}`, "PATCH", JSON.stringify({
                     name: formState.inputs.title?.value,
                     description: formState.inputs.description?.value

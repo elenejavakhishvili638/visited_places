@@ -114,14 +114,22 @@ export const updatePlace = async (req, res, next) => {
 
   let updatedPlace;
   try {
-    updatedPlace = await PlaceModel.findByIdAndUpdate(
-      placeId,
-      {
-        name,
-        description,
-      },
-      { new: true }
+    updatedPlace = await PlaceModel.findById(placeId);
+  } catch (error) {
+    return next(new HttpError("Could not update a place", 500));
+  }
+
+  if (updatedPlace.userId.toString() !== req.userData.userId) {
+    return next(
+      new HttpError("You are not authorized to update this place", 401)
     );
+  }
+
+  updatedPlace.name = name;
+  updatedPlace.description = description;
+
+  try {
+    await updatedPlace.save();
   } catch (error) {
     return next(new HttpError("Could not update a place", 500));
   }
@@ -142,6 +150,13 @@ export const deletePlace = async (req, res, next) => {
   if (!place) {
     return next(new HttpError("Could not find a place for this id", 404));
   }
+
+  if (place.userId.id !== req.userData.userId) {
+    return next(
+      new HttpError("You are not authorized to delete this place", 401)
+    );
+  }
+
   const imagePath = place.image;
 
   try {

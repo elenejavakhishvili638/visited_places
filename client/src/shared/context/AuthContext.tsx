@@ -3,7 +3,7 @@ import { createContext, useCallback, useEffect, useState } from "react";
 type AuthContextType = {
     isLoggedIn: boolean,
     token: string | null,
-    login: (uid: string, token: string) => void,
+    login: (uid: string, token: string, expirationDate?: Date) => void,
     logout: () => void,
     userId: string | null,
 };
@@ -24,10 +24,18 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const [token, setToken] = useState<string | null>(null)
     const [userId, setUserId] = useState<string | null>("")
 
-    const login = useCallback((uid: string, token: string) => {
+    const login = useCallback((uid: string, token: string, expirationDate?: Date) => {
         setToken(token)
         setUserId(uid)
-        localStorage.setItem("userData", JSON.stringify({ userId: uid, token }))
+        const tokenExpiration = expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60)
+        localStorage.setItem(
+            "userData",
+            JSON.stringify({
+                userId: uid,
+                token,
+                expiration: tokenExpiration.toISOString()
+            })
+        )
     }, [])
 
     const logout = useCallback(() => {
@@ -40,8 +48,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         const storedData = localStorage.getItem("userData")
         if (storedData) {
             const data = JSON.parse(storedData)
-            if (data && data.token) {
-                login(data.userId, data.token)
+            if (data && data.token && new Date(data.expirationDate) > new Date()) {
+                login(data.userId, data.token, new Date(data.expirationDate))
             }
         }
     }, [login])

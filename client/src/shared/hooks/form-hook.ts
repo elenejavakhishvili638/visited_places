@@ -3,7 +3,7 @@ import { useCallback, useReducer } from "react"
 type InputKeys = 'title' | 'description' | 'address' | 'email' | 'password' | 'name' | 'image';
 
 type InputData = {
-    value: string | File;
+    value: string;
     isValid: boolean;
 };
 

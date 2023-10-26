@@ -46,9 +46,6 @@ const NewPlace = () => {
             if (formState.inputs.image?.value) {
                 formData.append("image", formState.inputs.image?.value)
             }
-            if (userId) {
-                formData.append("userId", userId)
-            }
             await sendRequest(
                 "http://localhost:5000/api/places", "POST", formData, {
                 "Authorization": "Bearer " + token

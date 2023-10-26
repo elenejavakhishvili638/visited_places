@@ -1,23 +1,17 @@
-import { useCallback, useState, useEffect, useRef } from "react"
+import { useCallback, useState } from "react"
 
 
 export const useHttpClient = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [error, setError] = useState<string>("")
 
-    const activeHttpRequest = useRef<AbortController[]>([])
-
     const sendRequest = useCallback(async (url: string, method = "GET", body: string | FormData | null = null, headers = {}) => {
         setIsLoading(true)
-        const httpAbortCtrl = new AbortController();
-        activeHttpRequest.current.push(httpAbortCtrl)
-
         try {
             const response = await fetch(url, {
                 method,
                 headers,
                 body,
-                signal: httpAbortCtrl.signal
             })
 
             const responseData = await response.json()
@@ -46,13 +40,6 @@ export const useHttpClient = () => {
     const handleError = () => {
         setError("")
     }
-
-    useEffect(() => {
-        const activeHttpRequests = activeHttpRequest.current;
-        return () => {
-            activeHttpRequests.forEach(ctrl => ctrl.abort());
-        };
-    }, [])
 
     return { isLoading, error, sendRequest, handleError }
 }

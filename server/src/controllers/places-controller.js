@@ -53,7 +53,7 @@ export const createPlace = async (req, res, next) => {
     return next(new HttpError(errorMsgs.join(". "), 422));
   }
 
-  const { name, description, address, userId } = req.body;
+  const { name, description, address } = req.body;
 
   let coordinates;
 
@@ -66,7 +66,7 @@ export const createPlace = async (req, res, next) => {
   const createdPlace = new PlaceModel({
     name,
     description,
-    userId,
+    userId: req.userData.userId,
     image: req.file.path,
     location: coordinates,
     address,
@@ -74,7 +74,7 @@ export const createPlace = async (req, res, next) => {
 
   let user;
   try {
-    user = await UserModel.findById(userId);
+    user = await UserModel.findById(req.userData.userId);
   } catch (error) {
     return next(new HttpError("Creating place failed, please try again", 500));
   }
